@@ -7,11 +7,11 @@ SRC			= main.c parse_arguments.c \
 _GREEN		=\e[32m
 _YELLOW		=\e[33m
 
-NAME 		= philo
+NAME 		= philo_bonus
 
 OBJ			= $(SRC:.c=.o)
 
-HEADER 		= philo.h
+HEADER 		= philo_bonus.h
 CC 			= gcc
 CFLAGS 		= -Wall -Werror -Wextra
 

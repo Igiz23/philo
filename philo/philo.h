@@ -22,6 +22,7 @@ typedef struct s_ph
 	int				eat_now;
 	long long		last_eat;
 	int				x_ate;
+	int				pid;
 	t_mutex			fork;
 	pthread_t		thread_id;
 	void			*res;
@@ -60,6 +61,5 @@ int					init_thread(t_all *res);
 int					init_philo(t_all *res);
 int					init_mutex(t_all *res);
 int					finish_thread(t_all *res);
-
 
 #endif

@@ -42,8 +42,6 @@ int	init_thread(t_all *res)
 		if (pthread_create(&(res->ph[i].thread_id), NULL,
 				philo_thread, &(res->ph[i])))
 			return (exit_error_msg('p'));
-		if(pthread_detach(res->ph[i].thread_id) != 0)
-			return (exit_error_msg('p'));
 		philo[i].last_eat = time_ms();
 		i++;
 	}

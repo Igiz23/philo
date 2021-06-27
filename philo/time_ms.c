@@ -7,21 +7,21 @@ int	finish_thread(t_all *res)
 	i = 0;
 	while (i < res->philo_count)
 	{
-		if(pthread_join(res->ph[i].thread_id, NULL) != 0)
-			return(1);
+		if (pthread_detach(res->ph[i].thread_id) != 0)
+			return (exit_error_msg('p'));
 		i++;
 	}
 	i = res->philo_count;
 	while (i > -1)
 	{
-		if(pthread_mutex_destroy(&(res->ph[i].fork)) != 0)
+		if (pthread_mutex_destroy(&(res->ph[i].fork)) != 0)
 			return (1);
 		i--;
 	}
-	if(pthread_mutex_destroy(&(res->write)) != 0 ||
-	pthread_mutex_destroy(&(res->eat_check)) != 0)
-		return(1);
-	return(0);
+	if ((pthread_mutex_destroy(&(res->write)) != 0) || \
+		pthread_mutex_destroy(&(res->eat_check)) != 0)
+		return (1);
+	return (0);
 }
 
 int	exit_error_msg(char c)
