@@ -1,4 +1,4 @@
-SRC			= main.c parse_arguments.c \
+SRC			= main.c validate_arg.c \
 			philo_thread.c start.c time_ms.c utils_libft.c \
 
 

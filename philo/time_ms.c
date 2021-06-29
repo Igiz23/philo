@@ -62,7 +62,7 @@ void	smart_sleep(long long time, t_all *rules)
 	i = time_ms();
 	while (!(rules->dieded))
 	{
-		if ((time_ms() - i) >= time)
+		if ((time_ms() - i) == time)
 			break ;
 		usleep(10);
 	}
@@ -82,9 +82,9 @@ void	write_status(t_all *rules, int id, char c)
 		if (c == 'f')
 			ft_putstr_fd(G" has taken a fork"RS, 1);
 		if (c == 'e')
-			ft_putstr_fd(" is eating", 1);
+			ft_putstr_fd(Y" is eating"RS, 1);
 		if (c == 's')
-			ft_putstr_fd(Y" is sleeping"RS, 1);
+			ft_putstr_fd(" is sleeping", 1);
 		if (c == 't')
 			ft_putstr_fd(" is thinking", 1);
 		if (c == 'd')
@@ -92,5 +92,4 @@ void	write_status(t_all *rules, int id, char c)
 		ft_putchar_fd('\n', 1);
 	}
 	pthread_mutex_unlock(&(rules->write));
-	return ;
 }

@@ -1,26 +1,23 @@
 #include "philo_bonus.h"
 
-int	finish_thread(t_all *res)
+int	finish_process(t_all *res)
 {
 	int	i;
 
 	i = 0;
+	waitpid(-1, 0, 0);
 	while (i < res->philo_count)
 	{
-		if(pthread_join(res->ph[i].thread_id, NULL) != 0)
-			return(1);
+		kill(res->ph[i].pid, 9);
 		i++;
 	}
-	i = res->philo_count;
-	while (i > -1)
-	{
-		if(pthread_mutex_destroy(&(res->ph[i].fork)) != 0)
-			return (1);
-		i--;
-	}
-	if(pthread_mutex_destroy(&(res->write)) != 0 ||
-	pthread_mutex_destroy(&(res->eat_check)) != 0)
-		return(1);
+
+	sem_close(res->write);
+	sem_close(res->fork);
+	sem_close(res->eat_check);
+	sem_unlink("/ph_fork");
+	sem_unlink("/ph_write");
+	sem_unlink("/ph_eat_check");
 	return(0);
 }
 
@@ -36,8 +33,8 @@ int	exit_error_msg(char c)
 			"[4] - time_to_eat\n[5] - time_to_sleep\n"
 			"[6] - number_of_times_each_philosopher_must_eat\n"RS, 2);
 	}
-	if (c == 'p')
-		ft_putstr_fd("Pthread error!\n", 2);
+	if (c == 'f')
+		ft_putstr_fd("Forks error!\n", 2);
 	if (c == 'm')
 		ft_putstr_fd("Mutex error!\n", 2);
 	if (c == 'e')
@@ -64,7 +61,7 @@ void	smart_sleep(long long time, t_all *rules)
 	{
 		if ((time_ms() - i) >= time)
 			break ;
-		usleep(10);
+		usleep(50);
 	}
 }
 
@@ -72,7 +69,7 @@ void	write_status(t_all *rules, int id, char c)
 {
 	long long	i;
 
-	pthread_mutex_lock(&(rules->write));
+	sem_wait(rules->write);
 	if (!(rules->dieded))
 	{
 		i = time_ms() - rules->start;
@@ -91,6 +88,6 @@ void	write_status(t_all *rules, int id, char c)
 			ft_putstr_fd(R" died"RS, 1);
 		ft_putchar_fd('\n', 1);
 	}
-	pthread_mutex_unlock(&(rules->write));
+	sem_post(rules->write);
 	return ;
 }

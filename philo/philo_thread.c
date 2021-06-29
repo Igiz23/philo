@@ -5,11 +5,12 @@ void	philo_eats(t_ph *ph, t_all *res)
 	pthread_mutex_lock(&(res->ph[ph->left].fork));
 	pthread_mutex_lock(&(res->ph[ph->right].fork));
 	write_status(res, ph->id, 'f');
+	write_status(res, ph->id, 'f');
 	pthread_mutex_lock(&(res->eat_check));
 	write_status(res, ph->id, 'e');
 	ph->last_eat = time_ms();
 	pthread_mutex_unlock(&(res->eat_check));
-	smart_sleep(res->sleep, res);
+	smart_sleep(res->eat, res);
 	(ph->eat_now)++;
 	pthread_mutex_unlock(&(res->ph[ph->left].fork));
 	pthread_mutex_unlock(&(res->ph[ph->right].fork));
@@ -23,7 +24,7 @@ void	*philo_thread(void *philo)
 	ph = (t_ph *)philo;
 	res = ph->res;
 	if (ph->id % 2)
-		usleep(200);
+		usleep(1000);
 	while (1)
 	{
 		philo_eats(ph, res);

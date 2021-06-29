@@ -1,5 +1,5 @@
-SRC			= main.c parse_arguments.c \
-			philo_thread.c start.c time_ms.c utils_libft.c \
+SRC			= main_bonus.c validate_arg_bonus.c \
+			philo_thread_bonus.c start_bonus.c time_ms.c utils_libft.c \
 
 
 
