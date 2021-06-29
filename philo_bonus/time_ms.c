@@ -8,17 +8,16 @@ int	finish_process(t_all *res)
 	waitpid(-1, 0, 0);
 	while (i < res->philo_count)
 	{
-		kill(res->ph[i].pid, 9);
+		kill(res->ph[i].pid, SIGKILL);
 		i++;
 	}
-
 	sem_close(res->write);
 	sem_close(res->fork);
 	sem_close(res->eat_check);
-	sem_unlink("/ph_fork");
-	sem_unlink("/ph_write");
-	sem_unlink("/ph_eat_check");
-	return(0);
+	sem_unlink("ph_fork");
+	sem_unlink("ph_write");
+	sem_unlink("ph_eat_check");
+	return (0);
 }
 
 int	exit_error_msg(char c)
@@ -57,7 +56,7 @@ void	smart_sleep(long long time, t_all *rules)
 	long long	i;
 
 	i = time_ms();
-	while (!(rules->dieded))
+	while (!(rules->died))
 	{
 		if ((time_ms() - i) >= time)
 			break ;
@@ -70,23 +69,25 @@ void	write_status(t_all *rules, int id, char c)
 	long long	i;
 
 	sem_wait(rules->write);
-	if (!(rules->dieded))
+	if (!(rules->died))
 	{
 		i = time_ms() - rules->start;
 		ft_putnbr_fd(i, 1);
 		ft_putchar_fd(' ', 1);
 		ft_putnbr_fd(id + 1, 1);
 		if (c == 'f')
-			ft_putstr_fd(G" has taken a fork"RS, 1);
+			ft_putstr_fd(G" has taken a fork\n"RS, 2);
 		if (c == 'e')
-			ft_putstr_fd(" is eating", 1);
+			ft_putstr_fd(Y" is eating\n"RS, 2);
 		if (c == 's')
-			ft_putstr_fd(Y" is sleeping"RS, 1);
+			ft_putstr_fd(" is sleeping\n", 2);
 		if (c == 't')
-			ft_putstr_fd(" is thinking", 1);
+			ft_putstr_fd(" is thinking\n", 2);
 		if (c == 'd')
-			ft_putstr_fd(R" died"RS, 1);
-		ft_putchar_fd('\n', 1);
+		{
+			ft_putstr_fd(R" died\n"RS, 2);
+			exit (0);
+		}
 	}
 	sem_post(rules->write);
 	return ;

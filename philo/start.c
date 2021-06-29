@@ -4,33 +4,28 @@ void	die_check(t_all *res, t_ph *ph)
 {
 	int	i;
 
-	while (!(res->all_ate))
+	while (1)
 	{
-		i = -1;
-		while (++i < res->philo_count && !(res->dieded))
+		i = 0;
+		while (i < res->philo_count && !(res->died))
 		{
 			pthread_mutex_lock(&(res->eat_check));
 			if ((time_ms() - ph[i].last_eat) > res->live)
 			{
 				if (res->eat_count != -1 && res->philo_count != 1)
-					res->dieded = 1;
+					res->died = 1;
 				else
 				{
 					write_status(res, i, 'd');
-					res->dieded = 1;
+					res->died = 1;
 				}
 			}
 			pthread_mutex_unlock(&(res->eat_check));
-			usleep(100);
+			usleep(1000);
+			i++;
 		}
-		if (res->dieded)
+		if (res->died)
 			break ;
-//		i = 0;
-//		while (res->eat_count != -1 && i < res->philo_count
-//			&& ph[i++].x_ate >= res->eat_count)
-////			i++;
-//		if (i == res->philo_count)
-//			res->all_ate = 1;
 	}
 }
 
@@ -48,7 +43,6 @@ int	init_thread(t_all *res)
 				philo_thread, &(res->ph[i])))
 			return (exit_error_msg('p'));
 		philo[i].last_eat = time_ms();
-		usleep(1000);
 		i++;
 	}
 	die_check(res, res->ph);

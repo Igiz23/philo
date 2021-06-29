@@ -15,7 +15,6 @@ int	main(int argc, char **argv)
 		if (init_sem(&res))
 			return (exit_error_msg('e'));
 		init_process(&res);
-		usleep(100);
 		finish_process(&res);
 	}
 	else

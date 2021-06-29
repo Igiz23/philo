@@ -19,13 +19,11 @@ typedef pthread_mutex_t	t_mutex;
 typedef struct s_ph
 {
 	int				id;
-	int				left;
-	int				right;
 	int				eat_now;
 	long long		last_eat;
-	pid_t 			pid;
+	pid_t			pid;
 	pthread_t		die_check;
-	struct s_all 	*res;
+	struct s_all	*res;
 
 }	t_ph;
 
@@ -37,12 +35,14 @@ typedef struct s_all
 	int				eat;
 	int				sleep;
 	int				eat_count;
-	int				dieded;
+	int				died;
 	sem_t			all_ate;
 	sem_t			*write;
 	sem_t			*fork;
+	pthread_t		eat_th;
+	int 			eat_new;
 	sem_t			*eat_check;
-	struct s_ph		ph[200];
+	struct s_ph		ph[215];
 }	t_all;
 int					exit_error_msg(char c);
 void				ft_putstr_fd(char *s, int fd);
@@ -63,6 +63,5 @@ int					init_process(t_all *res);
 int					init_sem(t_all *res);
 int					init_philo(t_all *res);
 int					finish_process (t_all *res);
-
 
 #endif

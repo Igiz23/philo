@@ -21,10 +21,9 @@ typedef struct s_ph
 	int				right;
 	int				eat_now;
 	long long		last_eat;
-	int				x_ate;
 	t_mutex			fork;
 	pthread_t		thread_id;
-	void			*res;
+	struct s_all	*res;
 
 }	t_ph;
 
@@ -36,11 +35,10 @@ typedef struct s_all
 	int				eat;
 	int				sleep;
 	int				eat_count;
-	int				dieded;
-	int				all_ate;
+	int				died;
 	t_mutex			write;
 	t_mutex			eat_check;
-	struct s_ph		ph[200];
+	struct s_ph		ph[215];
 }	t_all;
 int					exit_error_msg(char c);
 void				ft_putstr_fd(char *s, int fd);

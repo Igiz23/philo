@@ -3,14 +3,18 @@
 void	philo_eats(t_ph *ph, t_all *res)
 {
 	sem_wait(res->fork);
+	write_status(res, ph->id, 'f');
 	sem_wait(res->fork);
 	write_status(res, ph->id, 'f');
-	sem_wait(res->eat_check);
+//	sem_wait(res->eat_check);
 	write_status(res, ph->id, 'e');
 	ph->last_eat = time_ms();
-	sem_post(res->eat_check);
-	smart_sleep(res->sleep, res);
-	(ph->eat_now)++;
+	if(res->eat_count > 0 && res->eat_count != ph->eat_now)
+	{
+		sem_post(res->eat_check);
+		(ph->eat_now)++;
+	}
+	smart_sleep(res->eat, res);
 	sem_post(res->fork);
 	sem_post(res->fork);
 }
@@ -23,10 +27,10 @@ void	philo_thread(void *philo)
 	ph = (t_ph *)philo;
 	res = ph->res;
 	ph->last_eat = time_ms();
-	pthread_create(&(ph->die_check), NULL,  die_check, philo);
-	if (ph->id % 2)
-		usleep(1500);
-	while (!res->dieded)
+	pthread_create(&(ph->die_check), NULL, die_check, philo);
+//	if (ph->id % 2)
+//		usleep(1000);
+	while (!res->died)
 	{
 		philo_eats(ph, res);
 		if (res->eat_count == ph->eat_now)
@@ -36,7 +40,7 @@ void	philo_thread(void *philo)
 		write_status(res, ph->id, 't');
 	}
 	pthread_join(ph->die_check, NULL);
-	if (res->dieded)
+	if (res->died)
 		exit(1);
 	exit(0);
 }
