@@ -14,8 +14,6 @@
 # define Y	"\x1b[33m"
 # define RS	"\x1b[0m"
 
-typedef pthread_mutex_t	t_mutex;
-
 typedef struct s_ph
 {
 	int				id;
@@ -34,14 +32,13 @@ typedef struct s_all
 	int				live;
 	int				eat;
 	int				sleep;
+	int				eat_new;
 	int				eat_count;
 	int				died;
-	sem_t			all_ate;
 	sem_t			*write;
 	sem_t			*fork;
-	pthread_t		eat_th;
-	int 			eat_new;
 	sem_t			*eat_check;
+	pthread_t		eat_th;
 	struct s_ph		ph[215];
 }	t_all;
 int					exit_error_msg(char c);

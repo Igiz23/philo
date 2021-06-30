@@ -36,6 +36,8 @@ typedef struct s_all
 	int				sleep;
 	int				eat_count;
 	int				died;
+	int				all_eat;
+	int				eat_end;
 	t_mutex			write;
 	t_mutex			eat_check;
 	struct s_ph		ph[215];

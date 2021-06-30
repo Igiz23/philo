@@ -1,43 +1,13 @@
 #include "philo_bonus.h"
 
-void	*die_check(void *philo)
-{
-	t_ph	*ph;
-	t_all	*res;
-
-	ph = (t_ph *)philo;
-	res = ph->res;
-	while (1)
-	{
-//		sem_wait(res->eat_check);
-		if ((time_ms() - ph->last_eat) >= res->live)
-		{
-			if (res->eat_count == -1 || res->philo_count == 1)
-				write_status(res, ph->id, 'd');
-			res->died = 1;
-			sem_wait(res->write);
-			exit(1);
-		}
-//		sem_post(res->eat_check);
-		if (res->died)
-			break ;
-		usleep(100);
-//		if (res->eat_count != -1 && ph->eat_now == res->eat_count)
-//			break ;
-	}
-	return (NULL);
-}
-
 int	init_sem(t_all *res)
 {
 	sem_unlink("ph_eat");
 	sem_unlink("ph_fork");
 	sem_unlink("ph_eat_check");
-//	sem_unlink("ph_died");
 	res->fork = sem_open("ph_fork", O_CREAT, S_IRWXU, res->philo_count);
 	res->write = sem_open("ph_write", O_CREAT, S_IRWXU, 1);
 	res->eat_check = sem_open("ph_eat_check", O_CREAT, S_IRWXU, 0);
-//	res->died = sem_open("ph_died", O_CREAT, S_IRWXU, 0);
 	if (res->fork <= 0 || res->write <= 0 || res->eat_check <= 0)
 		return (1);
 	return (0);
@@ -46,16 +16,15 @@ int	init_sem(t_all *res)
 void	*check_eat(void *rest)
 {
 	t_all	*res;
-	int	i;
+
 	res = rest;
-	i = 0;
-	while (res->eat_count > 0 && res->eat_new <= res->eat_count * res->philo_count)
+	while (res->eat_count > 0 && res->eat_new <= \
+	res->eat_count * res->philo_count)
 	{
 		sem_wait(res->eat_check);
 		res->eat_new++;
 	}
-
-	return NULL;
+	return (NULL);
 }
 
 int	init_process(t_all *res)

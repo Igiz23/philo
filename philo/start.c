@@ -1,19 +1,17 @@
 #include "philo.h"
 
-void	die_check(t_all *res, t_ph *ph)
+void	die_check(t_all *res, t_ph *ph, int i)
 {
-	int	i;
-
-	while (1)
+	while (!(res->all_eat))
 	{
 		i = 0;
-		while (i < res->philo_count && !(res->died))
+		while (i < res->philo_count && (!(res->died) || !(res->eat_end)))
 		{
 			pthread_mutex_lock(&(res->eat_check));
 			if ((time_ms() - ph[i].last_eat) > res->live)
 			{
-				if (res->eat_count != -1 && res->philo_count != 1)
-					res->died = 1;
+				if (ph[i].eat_now == res->eat_count)
+					res->eat_end = 1;
 				else
 				{
 					write_status(res, i, 'd');
@@ -21,10 +19,10 @@ void	die_check(t_all *res, t_ph *ph)
 				}
 			}
 			pthread_mutex_unlock(&(res->eat_check));
-			usleep(1000);
+			usleep(100);
 			i++;
 		}
-		if (res->died)
+		if (res->died == 1 || res->eat_end == 1)
 			break ;
 	}
 }
@@ -43,9 +41,10 @@ int	init_thread(t_all *res)
 				philo_thread, &(res->ph[i])))
 			return (exit_error_msg('p'));
 		philo[i].last_eat = time_ms();
+		usleep(100);
 		i++;
 	}
-	die_check(res, res->ph);
+	die_check(res, res->ph, 0);
 	return (0);
 }
 
@@ -85,6 +84,8 @@ int	init_mutex(t_all *res)
 
 int	init_struct(t_all *res, int argc, char **argv)
 {
+	res->all_eat = 0;
+	res->eat_end = 0;
 	res->philo_count = ft_atoi(argv[1]);
 	res->live = ft_atoi(argv[2]);
 	res->eat = ft_atoi(argv[3]);

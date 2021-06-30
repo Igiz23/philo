@@ -22,8 +22,8 @@ void	*philo_thread(void *philo)
 	ph = (t_ph *)philo;
 	res = ph->res;
 	if (ph->id % 2)
-		usleep(2000);
-	while (1)
+		usleep(1000);
+	while (!(res->died))
 	{
 		philo_eats(ph, res);
 		if (res->eat_count == ph->eat_now)

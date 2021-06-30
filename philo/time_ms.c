@@ -5,14 +5,14 @@ int	finish_thread(t_all *res)
 	int	i;
 
 	i = 0;
-	while (i < res->philo_count - 1)
+	while (i != res->philo_count - 1)
 	{
 		if (pthread_detach(res->ph[i].thread_id) != 0)
 			return (exit_error_msg('p'));
 		i++;
 	}
 	i = 0;
-	while (i < res->philo_count - 1)
+	while (i != res->philo_count - 1)
 	{
 		if (pthread_mutex_destroy(&(res->ph[i].fork)) != 0)
 			return (1);
