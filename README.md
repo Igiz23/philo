@@ -4,5 +4,5 @@ This project is a training to multi-threads/multi-process programming with the u
 It contains 2 different programs simulating a twist of the famous Dining Philosophers problem, all with the same basic rules.
 This project is also a good lesson in C optimization as we need to save every bit of CPU usage we can to ensure the survival of our philosophers.
 
-**philo: multi-threads and use of mutex
-**philo_bonus: multi-processes and use of semaphore
+**philo:** multi-threads and use of mutex
+**philo_bonus:** multi-processes and use of semaphore
